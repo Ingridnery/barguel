@@ -17,7 +17,7 @@ public class AluguelModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente.cpf")
     private ClienteModel cliente;
 

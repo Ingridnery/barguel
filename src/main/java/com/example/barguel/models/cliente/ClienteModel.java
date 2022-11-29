@@ -19,14 +19,14 @@ public class ClienteModel implements Serializable {
 
     @Column(nullable = false,unique = true,length = 40)
     private String nome;
-    @Column(nullable = false,unique = true,length = 11)
+    @Column(nullable = false,unique = true,length = 14)
     private String cpf;
     @Column(nullable = false,unique = true)
     private String email;
     @Column(nullable = false,unique = true)
     private String arraisAmador;
 
-    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER, orphanRemoval = false)
     private List<AluguelModel> alugueis = new ArrayList<>();
 
     public UUID getId() {

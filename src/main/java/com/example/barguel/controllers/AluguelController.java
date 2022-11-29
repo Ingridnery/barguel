@@ -77,7 +77,7 @@ public class AluguelController {
         aluguelService.deleteByid(aluguelModelOptional.get().getId());
         return ResponseEntity.status(HttpStatus.OK).body("Aluguel deletado com sucesso!");
     }
-    @GetMapping(value = "getAll")
+    @GetMapping(value = "/getAll")
     public ResponseEntity<List<AluguelModel>> getAllAlugueis(){
         return ResponseEntity.status(HttpStatus.OK).body(aluguelService.findAll());
     }

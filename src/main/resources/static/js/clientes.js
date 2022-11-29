@@ -4,11 +4,11 @@ function updateClientesTable(){
         url: "/cliente/getAll",
         success: function(result){
             var clientes = result;
-            var clientesTable = $("#barcosTable");
+            var clientesTable = $("#clientesTable");
             clientesTable.empty();
             for(var i=0; i<clientes.length; i++){
                 var cliente = clientes[i];
-                //clientesTable.append("<tr><td>"+cliente.nome+"</td><td>"+cliente.tipoBarco+"</td><td>"+barco.tamanho+"</td><td>"+barco.qtdPassageiros+"</td><td>"+barco.valorDiaria+"</td>");
+                clientesTable.append("<tr><td>"+cliente.nome+"</td><td>"+cliente.cpf+"</td><td>"+cliente.email+"</td><td>"+cliente.arraisAmador+"</td>");
             }
         },
     });
