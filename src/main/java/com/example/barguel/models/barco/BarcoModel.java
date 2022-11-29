@@ -1,11 +1,8 @@
 package com.example.barguel.models.barco;
 
-import com.example.barguel.models.aluguel.AluguelModel;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,7 +14,7 @@ public class BarcoModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false,unique = true,length = 11)
+    @Column(nullable = false,unique = true,length = 50)
     private String nome;
 
     @Column(nullable = false,unique = true)

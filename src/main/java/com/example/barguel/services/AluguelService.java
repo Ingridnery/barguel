@@ -1,7 +1,6 @@
 package com.example.barguel.services;
 
 import com.example.barguel.models.aluguel.AluguelModel;
-import com.example.barguel.models.barco.BarcoModel;
 import com.example.barguel.repositories.AluguelRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

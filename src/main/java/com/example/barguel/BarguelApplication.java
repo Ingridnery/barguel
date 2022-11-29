@@ -14,10 +14,4 @@ public class BarguelApplication {
     public static void main(String[] args) {
         SpringApplication.run(BarguelApplication.class, args);
     }
-
-    @GetMapping("/")
-    public String index(){
-        return "Ola mundo";
-    }
-
 }

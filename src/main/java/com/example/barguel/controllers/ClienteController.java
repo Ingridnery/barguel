@@ -8,7 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,7 +64,7 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.OK).body("Cliente deletado com sucesso!");
     }
     @GetMapping(value = "getAll")
-    public ResponseEntity<List<ClienteModel>> getAllClientes(){
+    public ResponseEntity<List<ClienteModel>> getAllClientes(HttpServletRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(clienteService.findAll());
     }
 

@@ -1,8 +1,5 @@
 package com.example.barguel.dtos;
 
-import com.example.barguel.models.barco.BarcoModel;
-import com.example.barguel.models.cliente.ClienteModel;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;

@@ -2,7 +2,6 @@ package com.example.barguel.dtos;
 
 import com.example.barguel.models.barco.TipoBarco;
 
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
