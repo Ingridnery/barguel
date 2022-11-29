@@ -2,9 +2,11 @@ package com.example.barguel.controllers;
 
 import com.example.barguel.dtos.AluguelDto;
 import com.example.barguel.models.aluguel.AluguelModel;
+import com.example.barguel.models.barco.BarcoModel;
 import com.example.barguel.models.cliente.ClienteModel;
 import com.example.barguel.services.AluguelService;
-import org.springframework.beans.BeanUtils;
+import com.example.barguel.services.BarcoService;
+import com.example.barguel.services.ClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +21,30 @@ import java.util.UUID;
 @RequestMapping("aluguel")
 public class AluguelController {
     final AluguelService aluguelService;
+    final ClienteService clienteService;
+    final BarcoService barcoService;
 
-    public AluguelController(AluguelService aluguelService) {
+    public AluguelController(AluguelService aluguelService, ClienteService clienteService, BarcoService barcoService) {
         this.aluguelService = aluguelService;
+        this.clienteService = clienteService;
+        this.barcoService = barcoService;
     }
 
 
     @PostMapping(value = "/save")
     public ResponseEntity<Object> saveAluguel(@Valid @RequestBody AluguelDto aluguelDto){
         var aluguelModel = new AluguelModel();
-        BeanUtils.copyProperties(aluguelDto, aluguelModel);
+        Optional<ClienteModel> clienteModel = clienteService.findById(aluguelDto.getIdCliente());
+        Optional<BarcoModel> barcoModel = barcoService.findById(aluguelDto.getIdBarco());
+
+        aluguelModel.setCliente(clienteModel.get());
+        aluguelModel.setBarco(barcoModel.get());
+
+        aluguelModel.setDataFinal(aluguelDto.getDataFim());
+        aluguelModel.setDataInicio(aluguelDto.getDataInicio());
+        aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
+
+
         return ResponseEntity.status(HttpStatus.CREATED).body(aluguelService.save(aluguelModel));
     }
     @PutMapping(value = "/update/{id}")
@@ -36,8 +52,8 @@ public class AluguelController {
         Optional<AluguelModel> aluguelModelOptional = aluguelService.findById(id);
         if(aluguelModelOptional.isPresent()){
             var aluguelModel = aluguelModelOptional.get();
-            aluguelModel.setBarco(aluguelDto.getBarco());
-            aluguelModel.setCliente(aluguelDto.getCliente());
+//            aluguelModel.setBarco(aluguelDto.getBarco());
+//            aluguelModel.setCliente(aluguelDto.getCliente());
             aluguelModel.setDataInicio(aluguelDto.getDataInicio());
             aluguelModel.setDataFinal(aluguelDto.getDataFim());
             aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());

@@ -5,12 +5,13 @@ import com.example.barguel.models.cliente.ClienteModel;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class AluguelDto {
     @NotNull
-    private ClienteModel cliente;
+    private UUID idCliente;
     @NotNull
-    private BarcoModel barco;
+    private UUID idBarco;
     @NotNull
     private LocalDate dataInicio;
     @NotNull
@@ -18,28 +19,28 @@ public class AluguelDto {
     @NotNull
     private int qtdPassageiros;
 
-    public AluguelDto(ClienteModel cliente, BarcoModel barco, LocalDate dataInicio, LocalDate dataFim, int qtdPassageiros) {
-        this.cliente = cliente;
-        this.barco = barco;
+    public AluguelDto(UUID idCliente, UUID idBarco, LocalDate dataInicio, LocalDate dataFim, int qtdPassageiros) {
+        this.idCliente = idCliente;
+        this.idBarco = idBarco;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.qtdPassageiros = qtdPassageiros;
     }
 
-    public ClienteModel getCliente() {
-        return cliente;
+    public UUID getIdCliente() {
+        return idCliente;
     }
 
-    public void setCliente(ClienteModel cliente) {
-        this.cliente = cliente;
+    public void setIdCliente(UUID idCliente) {
+        this.idCliente = idCliente;
     }
 
-    public BarcoModel getBarco() {
-        return barco;
+    public UUID getIdBarco() {
+        return idBarco;
     }
 
-    public void setBarco(BarcoModel barco) {
-        this.barco = barco;
+    public void setIdBarco(UUID idBarco) {
+        this.idBarco = idBarco;
     }
 
     public LocalDate getDataInicio() {
