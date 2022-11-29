@@ -1,7 +1,11 @@
 package com.example.barguel.models.cliente;
 
+import com.example.barguel.models.aluguel.AluguelModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,6 +25,9 @@ public class ClienteModel implements Serializable {
     private String email;
     @Column(nullable = false,unique = true)
     private String arraisAmador;
+
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, orphanRemoval = false)
+    private List<AluguelModel> alugueis = new ArrayList<>();
 
     public UUID getId() {
         return id;

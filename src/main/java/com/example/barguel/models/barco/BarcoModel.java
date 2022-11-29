@@ -1,7 +1,11 @@
 package com.example.barguel.models.barco;
 
+import com.example.barguel.models.aluguel.AluguelModel;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,7 +31,6 @@ public class BarcoModel implements Serializable {
 
     @Column(nullable = false,unique = true)
     private Double valorDiaria;
-
 
     public Double calculateAluguel(int numberOfDays){
         return numberOfDays * valorDiaria;
