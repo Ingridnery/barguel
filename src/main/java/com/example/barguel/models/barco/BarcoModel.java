@@ -17,16 +17,16 @@ public class BarcoModel implements Serializable {
     @Column(nullable = false,unique = true,length = 50)
     private String nome;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private TipoBarco tipoBarco;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private Double tamanho;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private Integer qtdPassageiros;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private Double valorDiaria;
 
     public Double calculateAluguel(int numberOfDays){
