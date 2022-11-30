@@ -8,7 +8,12 @@ function updateBarcosTable(){
             barcosTable.empty();
             for(var i=0; i<barcos.length; i++){
                 var barco = barcos[i];
-                barcosTable.append("<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6' >"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6'>"+barco.valorDiaria+"</td><td id='"+barco.id+"'><a href='#' onclick='edit(event)' data-modal-toggle='barcoModal' type='button' data-modal-toggle='barcoModal' class='edit font-medium text-blue-600 dark:text-blue-500 hover:underline' ><i class='fa-solid fa-lg fa-pen-to-square'></i></a><a href='#' onclick='remove(event)' class='font-medium text-red-600 ml-3 dark:text-red-500 hover:underline'><i class='fa-solid fa-lg fa-trash'></i></a></td></tr>");
+                let tr = "<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6' >"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6'>"+barco.valorDiaria+"</td>";
+                if(isLoggedIn()){
+                    tr = tr + "<td class='operacoes' id='"+barco.id+"'><a href='#' onclick='edit(event)' data-modal-toggle='barcoModal' type='button' data-modal-toggle='barcoModal' class='edit font-medium text-blue-600 dark:text-blue-500 hover:underline' ><i class='fa-solid fa-lg fa-pen-to-square'></i></a><a href='#' onclick='remove(event)' class='font-medium text-red-600 ml-3 dark:text-red-500 hover:underline'><i class='fa-solid fa-lg fa-trash'></i></a></td></tr>";
+                }
+                barcosTable.append(tr);
+
             }
         }
     });
@@ -90,12 +95,12 @@ function displayLoggedInOptions(){
     // aqui manda mostrar a coluna de editar e excluir
     $("#btnAddBarco").show();
     $("#colOperacao").show();
-
 }
 
 function hideLoggedInOptions(){
     $("#btnAddBarco").addClass("hidden");
-    $("td").last().addClass("hidden");
+    $("#colOperacao").hide();
+
 }
 
 
