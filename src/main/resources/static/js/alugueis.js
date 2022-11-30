@@ -15,34 +15,38 @@ function updateAlugueisTable(){
     });
 }
 
-$(document).ready(function (){
-    isLoggedIn() ? updateAlugueisTable() : window.location.href = "login.html";
-
+function fillModalSelects() {
     $.ajax({
         type: "GET",
         url: "/cliente/getAll",
         success: function (result) {
             var clientes = result;
-            var clienteOption = $("#cliente");
+            var clientesSelect = $("#cliente");
+            clientesSelect.empty();
             for (var i = 0; i < clientes.length; i++) {
                 var cliente = clientes[i];
-                clienteOption.append("<option value='" + cliente.id + "'>" + cliente.nome + "</option>");
-                console.log()
+                clientesSelect.append("<option value='" + cliente.id + "'>" + cliente.nome + "</option>");
             }
-        }
+        },
     });
     $.ajax({
         type: "GET",
         url: "/barco/getAll",
         success: function (result) {
             var barcos = result;
-            var barcoOption = $("#barco");
+            var barcosSelect = $("#barco");
+            barcosSelect.empty();
             for (var i = 0; i < barcos.length; i++) {
                 var barco = barcos[i];
-                barcoOption.append("<option value='" + barco.id + "'>" + barco.nome + "</option>");
+                barcosSelect.append("<option value='" + barco.id + "'>" + barco.nome + "</option>");
             }
-        }
+        },
     });
+}
+
+$(document).ready(function (){
+    isLoggedIn() ? updateAlugueisTable() : window.location.href = "login.html";
+    fillModalSelects();
 });
 
 
@@ -72,13 +76,13 @@ function create(aluguel){
         success: function(){
             Swal.fire({
                 title: 'Sucesso!',
-                text: 'Aluguel cadastrado com sucesso!',
+                text: 'Aluguel realizado com sucesso!',
                 icon: 'success'
             })
-            updateClientesTable();
+            updateAlugueisTable();
             $("#modal-form")[0].reset();
         }
-    })
+     })
 }
 
 function remove(event){
@@ -99,12 +103,13 @@ $("#btnAddAluguel").click(function(){
 $("#modal-form").submit(function(event){
     event.preventDefault();
     let aluguel = {
-        cliente : $("#cliente").val(),
-        barco : $("#barco").val(),
+        idCliente: $("#cliente").val(),
+        idBarco: $("#barco").val(),
         qtdPassageiros: $("#passageiros").val(),
-        dataInicio : $("#inicio").val(),
-        dataFim : $("#fim").val()
+        dataInicio: $("#inicio").val(),
+        dataFim: $("#fim").val()
     }
+
     let typeOfOperation = $("#typeOfOperation").val();
     if(typeOfOperation === 'CREATE')
         create(aluguel);
