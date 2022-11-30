@@ -50,10 +50,12 @@ public class AluguelController {
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<Object> updateAluguel(@PathVariable UUID id, @RequestBody @Valid AluguelDto aluguelDto){
         Optional<AluguelModel> aluguelModelOptional = aluguelService.findById(id);
+        Optional<ClienteModel> clienteModel = clienteService.findById(aluguelDto.getIdCliente());
+        Optional<BarcoModel> barcoModel = barcoService.findById(aluguelDto.getIdBarco());
         if(aluguelModelOptional.isPresent()){
             var aluguelModel = aluguelModelOptional.get();
-//            aluguelModel.setBarco(aluguelDto.getBarco());
-//            aluguelModel.setCliente(aluguelDto.getCliente());
+            aluguelModel.setBarco(barcoModel.get());
+            aluguelModel.setCliente(clienteModel.get());
             aluguelModel.setDataInicio(aluguelDto.getDataInicio());
             aluguelModel.setDataFinal(aluguelDto.getDataFim());
             aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
