@@ -8,7 +8,7 @@ function updateBarcosTable(){
             barcosTable.empty();
             for(var i=0; i<barcos.length; i++){
                 var barco = barcos[i];
-                barcosTable.append("<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6'>"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6'>"+barco.valorDiaria+"</td><td class='hidden'>"+barco.id+"</td>");
+                barcosTable.append("<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6' >"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6'>"+barco.valorDiaria+"</td><td id='"+barco.id+"'><a href='#' onclick='edit(event)' data-modal-toggle='barcoModal' type='button' data-modal-toggle='barcoModal' class='edit font-medium text-blue-600 dark:text-blue-500 hover:underline' ><i class='fa-solid fa-lg fa-pen-to-square'></i></a><a href='#' onclick='remove(event)' class='font-medium text-red-600 ml-3 dark:text-red-500 hover:underline'><i class='fa-solid fa-lg fa-trash'></i></a></td></tr>");
             }
         }
     });
@@ -36,14 +36,66 @@ function create(barco){
         }
      })
 }
+function update(barco,id){
+    $.ajax({
+        url:'/barco/update/'+id,
+        method: 'PUT',
+        data: JSON.stringify(barco),
+        dataType: 'json',
+        contentType: "application/json; charset=utf-8",
+        success: function(){
+            updateBarcosTable();
+            $("#modal-form")[0].reset();
+            const modal = new Modal(document.getElementById('modalBarco'));
+            modal.hide();
+        }
+    })
+}
+function edit(event)
+{
+    event.preventDefault();
+    let id = $(event.currentTarget.parentNode).attr('id');
+    $.ajax({
+        url: 'http://localhost:8080/barco/findBy/' + id,
+        method: 'GET',
+        success: function (data) {
+            $("#nome").val(data.nome);
+            $("#tipoBarco").val(data.tipoBarco);
+            $("#tamanho").val(data.tamanho);
+            $("#qtdPassageiros").val(data.qtdPassageiros);
+            $("#valorDiaria").val(data.valorDiaria);
+            $("#typeOfOperation").val("UPDATE");
+            $("#idBarco").val(id);
+            const modal = new Modal(document.getElementById('modalBarco'));
+            modal.show();
+        }
+    })
+}
+function remove(event){
+    let id = $(event.currentTarget.parentNode).attr('id');
+    $.ajax({
+        url:'http://localhost:8080/barco/delete/'+ id,
+        method: 'DELETE',
+        success: function(){
+            updateBarcosTable();
+        }
+    })
+}
+
+$("#btnAddBarco").click(function(){
+    $("#typeOfOperation").val("CREATE");
+});
 
 function displayLoggedInOptions(){
     // aqui manda mostrar a coluna de editar e excluir
     $("#btnAddBarco").show();
+    $("#colOperacao").show();
+
 }
 
 function hideLoggedInOptions(){
     $("#btnAddBarco").addClass("hidden");
+    $("td").last().addClass("hidden");
 }
 
 
@@ -62,8 +114,14 @@ $("#modal-form").submit(function(event){
         qtdPassageiros: $("#qtdPassageiros").val(),
         valorDiaria: $("#valorDiaria").val()
     }
+    let typeOfOperation = $("#typeOfOperation").val();
+    if(typeOfOperation === 'CREATE')
+        create(barco);
+    else if(typeOfOperation === 'UPDATE')
+        update(barco, $("#idBarco").val());
+    else
+        alert('Invalid operation');
 
-    create(barco);
     const modal = new Modal(document.getElementById('modalBarco'));
     modal.hide();
     removeModalBackdrop();

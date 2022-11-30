@@ -1,9 +1,7 @@
 package com.example.barguel.controllers;
 
 import com.example.barguel.dtos.BarcoDto;
-import com.example.barguel.dtos.ClienteDto;
 import com.example.barguel.models.barco.BarcoModel;
-import com.example.barguel.models.cliente.ClienteModel;
 import com.example.barguel.services.BarcoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;

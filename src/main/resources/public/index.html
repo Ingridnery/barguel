@@ -96,7 +96,7 @@
 									<th scope="col" class="py-3 px-6">Tamanho</th>
 									<th scope="col" class="py-3 px-6">Passageiros</th>
 									<th scope="col" class="py-3 px-6">Valor Diária</th>
-									<th scope="col" class="py-3 px-6 hidden">Operação</th>
+									<th id="colOperacao" scope="col" class="py-3 px-6 hidden">Operação</th>
 								</tr>
 							</thead>
 							<tbody id="barcosTable">
@@ -116,7 +116,7 @@
 					<div class="py-6 px-6 lg:px-8">
 						<form class="space-y-6" action="#" id="modal-form">
 							<input id="typeOfOperation" type="hidden" value="CREATE">
-							<input id="clienteId" type="hidden">
+							<input id="idBarco" type="hidden">
 							<div>
 								<label for="nome"
 									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nome</label>
