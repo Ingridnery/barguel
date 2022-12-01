@@ -58,6 +58,13 @@ function remove(event){
         method: 'DELETE',
         success: function(){
             updateClientesTable();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
     })
 }
