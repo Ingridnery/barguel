@@ -81,7 +81,15 @@ function create(aluguel){
             })
             updateAlugueisTable();
             $("#modal-form")[0].reset();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
+
      })
 }
 

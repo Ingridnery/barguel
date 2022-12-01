@@ -33,36 +33,74 @@ public class AluguelController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<Object> saveAluguel(@Valid @RequestBody AluguelDto aluguelDto){
-        var aluguelModel = new AluguelModel();
-        Optional<ClienteModel> clienteModel = clienteService.findById(aluguelDto.getIdCliente());
+        if(!aluguelService.isValidDate(aluguelDto.getDataInicio(),aluguelDto.getDataFim())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data final não pode ser anterior a hoje!");
+        }
         Optional<BarcoModel> barcoModel = barcoService.findById(aluguelDto.getIdBarco());
 
-        aluguelModel.setCliente(clienteModel.get());
-        aluguelModel.setBarco(barcoModel.get());
+        if(aluguelDto.getQtdPassageiros() > barcoModel.get().getQtdPassageiros())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quantidade de passageiros acima da suportada!");
 
-        aluguelModel.setDataFinal(aluguelDto.getDataFim());
-        aluguelModel.setDataInicio(aluguelDto.getDataInicio());
-        aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
+        List<AluguelModel> alugueis =aluguelService.findAll()
+                .stream()
+                .filter(aluguel -> aluguel.getBarco().getId().equals(aluguelDto.getIdBarco()) ||
+                        aluguel.getDataInicio().isAfter(aluguelDto.getDataFim()))
+                .toList();
+        if(alugueis.isEmpty()){
+            var aluguelModel = new AluguelModel();
+            Optional<ClienteModel> clienteModel = clienteService.findById(aluguelDto.getIdCliente());
+
+            aluguelModel.setCliente(clienteModel.get());
+            aluguelModel.setBarco(barcoModel.get());
+
+            aluguelModel.setDataFinal(aluguelDto.getDataFim());
+            aluguelModel.setDataInicio(aluguelDto.getDataInicio());
+            aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
+            return ResponseEntity.status(HttpStatus.CREATED).body(aluguelService.save(aluguelModel));
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Esse barco já está alugado nessa data!");
+        }
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(aluguelService.save(aluguelModel));
+
     }
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<Object> updateAluguel(@PathVariable UUID id, @RequestBody @Valid AluguelDto aluguelDto){
         Optional<AluguelModel> aluguelModelOptional = aluguelService.findById(id);
         Optional<ClienteModel> clienteModel = clienteService.findById(aluguelDto.getIdCliente());
         Optional<BarcoModel> barcoModel = barcoService.findById(aluguelDto.getIdBarco());
-        if(aluguelModelOptional.isPresent()){
-            var aluguelModel = aluguelModelOptional.get();
-            aluguelModel.setBarco(barcoModel.get());
-            aluguelModel.setCliente(clienteModel.get());
-            aluguelModel.setDataInicio(aluguelDto.getDataInicio());
-            aluguelModel.setDataFinal(aluguelDto.getDataFim());
-            aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
 
-            return ResponseEntity.status(HttpStatus.OK).body(aluguelService.save(aluguelModel));
+        if(aluguelDto.getQtdPassageiros() > barcoModel.get().getQtdPassageiros())
+            return ResponseEntity.status(getBadRequest()).body("Quantidade de passageiros acima da suportada!");
+
+        List<AluguelModel> alugueis =aluguelService.findAll()
+                .stream()
+                .filter(aluguel -> aluguel.getBarco().getId().equals(aluguelDto.getIdBarco()) ||
+                        aluguel.getDataInicio().isAfter(aluguelDto.getDataFim()))
+                .toList();
+        if(alugueis.isEmpty()){
+            if(aluguelModelOptional.isPresent()){
+                var aluguelModel = aluguelModelOptional.get();
+                aluguelModel.setBarco(barcoModel.get());
+                aluguelModel.setCliente(clienteModel.get());
+                aluguelModel.setDataInicio(aluguelDto.getDataInicio());
+                aluguelModel.setDataFinal(aluguelDto.getDataFim());
+                aluguelModel.setQtdPassageiros(aluguelDto.getQtdPassageiros());
+
+                return ResponseEntity.status(HttpStatus.OK).body(aluguelService.save(aluguelModel));
+            }
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(aluguelService.findAll());
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Esse barco já está alugado nessa data!");
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Dados inválido!");
+    }
+
+
+    private static HttpStatus getBadRequest() {
+        return HttpStatus.BAD_REQUEST;
     }
 
     @GetMapping(value = "/findBy/{id}")
