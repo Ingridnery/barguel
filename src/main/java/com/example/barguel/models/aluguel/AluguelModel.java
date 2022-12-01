@@ -21,7 +21,7 @@ public class AluguelModel implements Serializable {
     @JoinColumn(name = "cliente.cpf")
     private ClienteModel cliente;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "barco_id", referencedColumnName = "id")
     private BarcoModel barco;
 
