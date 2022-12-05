@@ -129,6 +129,7 @@ $("#modal-form").submit(function(event){
     const modal = new Modal(document.getElementById('modalAluguel'));
     modal.hide();
     removeModalBackdrop();
+    $("body").append("<div modal-backdrop></div>")
 });
 
 function edit(event)

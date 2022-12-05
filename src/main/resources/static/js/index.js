@@ -8,12 +8,12 @@ function updateBarcosTable(){
             barcosTable.empty();
             for(var i=0; i<barcos.length; i++){
                 var barco = barcos[i];
-                let tr = "<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6' >"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6'>"+barco.valorDiaria+"</td>";
+                let tr = "<tr class='bg-white border-b dark:bg-gray-900 dark:border-gray-700'><td class='py-4 px-6'>"+barco.nome+"</td><td class='py-4 px-6'>"+barco.tipoBarco+"</td><td class='py-4 px-6' >"+barco.tamanho+"</td><td class='py-4 px-6'>"+barco.qtdPassageiros+"</td><td class='py-4 px-6 valorDiaria'>"+barco.valorDiaria+"</td>";
                 if(isLoggedIn()){
                     tr = tr + "<td class='operacoes' id='"+barco.id+"'><a href='#' onclick='edit(event)' data-modal-toggle='barcoModal' type='button' data-modal-toggle='barcoModal' class='edit font-medium text-blue-600 dark:text-blue-500 hover:underline' ><i class='fa-solid fa-lg fa-pen-to-square'></i></a><a href='#' onclick='remove(event)' class='font-medium text-red-600 ml-3 dark:text-red-500 hover:underline'><i class='fa-solid fa-lg fa-trash'></i></a></td></tr>";
                 }
                 barcosTable.append(tr);
-
+                $('.valorDiaria').mask("#.##0,00", {reverse: true});
             }
         }
     });
@@ -38,6 +38,13 @@ function create(barco){
             })
             updateBarcosTable();
             $("#modal-form")[0].reset();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
      })
 }
@@ -53,6 +60,13 @@ function update(barco,id){
             $("#modal-form")[0].reset();
             const modal = new Modal(document.getElementById('modalBarco'));
             modal.hide();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
     })
 }
@@ -73,6 +87,13 @@ function edit(event)
             $("#idBarco").val(id);
             const modal = new Modal(document.getElementById('modalBarco'));
             modal.show();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
     })
 }
@@ -82,7 +103,19 @@ function remove(event){
         url:'http://localhost:8080/barco/delete/'+ id,
         method: 'DELETE',
         success: function(){
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'Barco excluido com sucesso',
+                icon: 'success'
+            })
             updateBarcosTable();
+        },
+        error : function (resp){
+            Swal.fire({
+                title: 'Erro!',
+                text: resp.responseText,
+                icon: 'error'
+            })
         }
     })
 }
@@ -105,6 +138,7 @@ function hideLoggedInOptions(){
 
 
 $(document).ready(function(){
+    $('#valorDiaria').mask("#.##0,00", {reverse: true});
     isLoggedIn() ? displayLoggedInOptions() : hideLoggedInOptions();
     updateBarcosTable();
 });
@@ -117,7 +151,7 @@ $("#modal-form").submit(function(event){
         tipoBarco: $("#tipoBarco").val(),
         tamanho: $("#tamanho").val(),
         qtdPassageiros: $("#qtdPassageiros").val(),
-        valorDiaria: $("#valorDiaria").val()
+        valorDiaria: parseFloat($("#valorDiaria").val().replace(".","").replace(",","."))
     }
     let typeOfOperation = $("#typeOfOperation").val();
     if(typeOfOperation === 'CREATE')
@@ -130,4 +164,5 @@ $("#modal-form").submit(function(event){
     const modal = new Modal(document.getElementById('modalBarco'));
     modal.hide();
     removeModalBackdrop();
+    $("body").append("<div modal-backdrop></div>")
 });
