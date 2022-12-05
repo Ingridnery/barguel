@@ -31,4 +31,8 @@ public class BarcoService {
     public void delete(BarcoModel barcoModel){deleteByid(barcoModel.getId());}
 
     public Optional<BarcoModel> findById(UUID id){return barcoRepository.findById(id);}
+
+    public void deleteById(UUID id) {
+        barcoRepository.deleteById(id);
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.barguel.controllers;
 
 import com.example.barguel.dtos.BarcoDto;
+import com.example.barguel.models.aluguel.AluguelModel;
 import com.example.barguel.models.barco.BarcoModel;
+import com.example.barguel.services.AluguelService;
 import com.example.barguel.services.BarcoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -19,9 +21,11 @@ import java.util.UUID;
 public class BarcoController {
 
     final BarcoService barcoService;
+    final AluguelService aluguelService;
 
-    public BarcoController(BarcoService barcoService) {
+    public BarcoController(BarcoService barcoService, AluguelService aluguelService) {
         this.barcoService = barcoService;
+        this.aluguelService = aluguelService;
     }
     @PostMapping(value = "/save")
     public ResponseEntity<Object> saveBarco(@Valid @RequestBody BarcoDto barcoDto){
@@ -54,12 +58,18 @@ public class BarcoController {
     public ResponseEntity<Object> deleteCliente(@PathVariable(value = "id")UUID id){
         Optional<BarcoModel> barcoModelOptional = barcoService.findById(id);
         if(barcoModelOptional.isEmpty()){
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Barco não encontrado!");
         }
-        //verificar se o barco possui um aluguel em aberto antes de excluir
-        barcoService.deleteByid(barcoModelOptional.get().getId());
-        return ResponseEntity.status(HttpStatus.OK).body("Barco deletado com sucesso!");
+        List<AluguelModel> alugueis = aluguelService.findAll()
+                .stream()
+                .filter(aluguel -> aluguel.getBarco().getId().equals(barcoModelOptional.get().getId()))
+                .toList();
+        if(alugueis.isEmpty()){
+            barcoService.deleteByid(barcoModelOptional.get().getId());
+            return ResponseEntity.status(HttpStatus.OK).body("Barco deletado com sucesso!");
+        }
+        else
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O barco não pode ser deletado pois possui um aluguel associado!");
     }
     @GetMapping(value = "getAll")
     public ResponseEntity<List<BarcoModel>> getAllClientes(){
